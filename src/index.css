@@ -15,6 +15,12 @@ h2 {
   color: #FFFFFF;
 }
 
+h3 {
+  margin-left: 5%;
+  font-family: Consolas;
+  color: #FFFFFF;
+}
+
 button {
   background-color: #191414;
   border: 2px solid #FFFFFF;
@@ -23,5 +29,21 @@ button {
   color: #FFFFFF;
   font-family: Consolas;
   font-size: 24px;
-  width: 90%;
+}
+
+li {
+  color: #FFFFFF;
+  font-family: Consolas;
+  font-size: 24px;
+  margin-left: 5%;
+  list-style-type: none;
+}
+
+.debug-controls {
+  margin-top: 5%;
+  margin-left: 5%;
+  font-family: Consolas;
+  font-size: 18px;
+  width: auto;
+  border: 2px solid #1DB954;
 }
