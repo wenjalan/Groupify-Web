@@ -1,0 +1,10 @@
+groupify-web-app
+    welcome-page
+        welcome-header
+        start-button
+    console-page
+        guest-list
+        add-guest-button
+        make-playlist-button
+    playlist-created-page
+        playlist-link-box

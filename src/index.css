@@ -10,17 +10,18 @@ h1 {
 }
 
 h2 {
-  margin: 5%;
+  margin-left: 5%;
   font-family: Consolas;
+  color: #FFFFFF;
 }
 
 button {
-  align: center;
   background-color: #191414;
   border: 2px solid #FFFFFF;
   margin-left: 5%;
+  margin-right: 5%;
   color: #FFFFFF;
   font-family: Consolas;
   font-size: 24px;
-  width: 300px;
+  width: 90%;
 }
