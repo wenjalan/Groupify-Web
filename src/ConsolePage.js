@@ -4,16 +4,30 @@ class ConsolePage extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.loadInviteLink = this.loadInviteLink.bind(this);
         this.state = {
-            inviteLink: 'hold on...',
+            inviteLink: 'loading...',
         };
     }
 
     async componentDidMount() {
+        if (this.state.inviteLink == 'loading...') {
+            let i = setInterval(this.loadInviteLink, 5000);
+            this.setState({
+                interval: i,
+            })
+        }
+    }
+
+    async loadInviteLink() {
         let joinUrl = await this.props.getPartyInvite();
-        this.setState({
-            inviteLink: joinUrl == null ? 'whoops' : joinUrl,
-        });
+        if (joinUrl != null) {
+            clearInterval(this.state.interval);
+            this.setState({
+                inviteLink: joinUrl,
+            });
+        }
+        
     }
 
     handleClick() {
@@ -36,7 +50,7 @@ class ConsolePage extends React.Component {
 }
 
 function GuestList() {
-    const guests = ['You (host)', 'Your Best Friend', 'Your Best Friend\'s Friend'];
+    const guests = ['You (host)', 'Your Best Friend', 'Your Other Friend'];
     return guests.map((guests) => 
         <li>{guests}</li>
     );

@@ -55,7 +55,7 @@ class GroupifyWeb extends React.Component {
         // set party id state and move onto next page
         this.setState({
             partyId: id,
-            // stage: 1,
+            stage: 1,
         });
         console.log('set party id to', id);
     }
@@ -65,8 +65,7 @@ class GroupifyWeb extends React.Component {
         // endpoint url
         const endpointUrl = API_ENDPOINT + '/join?party=' + this.state.partyId;
 
-        // poll every 2 seconds for the invite link
-        console.log('waiting for join party url from service...');
+        console.log('getting join party url from service...');
         let joinUrl = await fetch(endpointUrl, {
             method: 'GET',
             headers: {
@@ -80,8 +79,8 @@ class GroupifyWeb extends React.Component {
             console.error('error:' + error);
             return null;
         });
-        console.log('success, join url:' + joinUrl);
-        return joinUrl;
+        console.log('response:' + joinUrl);
+        return joinUrl.startsWith('no party with') ? null : joinUrl;
     }
 
     // fired when the user clicks "Everyone's In" on the ConsolePage
