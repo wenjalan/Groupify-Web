@@ -17,14 +17,18 @@ class GroupifyWeb extends React.Component {
             stage: 0,
             partyId: -1,
             playlistLink: 'null',
+            partyInvite: 'hold on',
         });
         this.handleClick = this.handleClick.bind(this);
         this.createParty = this.createParty.bind(this);
+        this.getPartyInvite = this.getPartyInvite.bind(this);
+        this.createPlaylist = this.createPlaylist.bind(this);
     }
 
     // fired when the user clicks "Start the Party" on the WelcomePage
     async createParty() {
         // get the authentication URL
+        console.log('requesting create party from service...');
         let endpointUrl = API_ENDPOINT + '/action?action=create&party=null'
         const authUrl = await fetch(endpointUrl, {
             // mode: 'no-cors',
@@ -39,7 +43,7 @@ class GroupifyWeb extends React.Component {
         .catch((error) => {
             console.error('error occurred:', error);
         });
-        // console.log('url:', authUrl);
+        console.log('success, url:', authUrl);
 
         // save partyId
         let index = authUrl.search('&state=') + 7;
@@ -48,22 +52,62 @@ class GroupifyWeb extends React.Component {
         // open it in a new window
         window.open(authUrl);
 
-        // set party id state
+        // set party id state and move onto next page
         this.setState({
             partyId: id,
+            // stage: 1,
         });
         console.log('set party id to', id);
     }
 
     // fired when the ConsolePage loads
-    getPartyInvite() {
-        alert('getPartyInvite');
-        return 'http://groupi.fy/XXXX';
+    async getPartyInvite() {
+        // endpoint url
+        const endpointUrl = API_ENDPOINT + '/join?party=' + this.state.partyId;
+
+        // poll every 2 seconds for the invite link
+        console.log('waiting for join party url from service...');
+        let joinUrl = await fetch(endpointUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) => {
+            return response.text();
+        })
+        .catch((error) => {
+            console.error('error:' + error);
+            return null;
+        });
+        console.log('success, join url:' + joinUrl);
+        return joinUrl;
     }
 
     // fired when the user clicks "Everyone's In" on the ConsolePage
-    createPlaylist() {
-        alert('createPlaylist');
+    async createPlaylist() {
+        console.log('creating playlist...');
+        let endpointUrl = API_ENDPOINT + '/action?action=MAKE&party=' + this.state.partyId;
+        let res = await fetch(endpointUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) => {
+            return response.text();
+        })
+        .catch((error) => {
+            console.error('error:' + error);
+        })
+        console.log('response:' + res);
+
+        // move onto PlaylistCreatedPage
+        this.setState({
+            stage: 2,
+        });
+
+        return res;
     }
     
     handleClick() {

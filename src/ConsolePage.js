@@ -1,19 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
 
 class ConsolePage extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
         this.state = {
-            inviteLink: 'whoops'
+            inviteLink: 'hold on...',
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        let joinUrl = await this.props.getPartyInvite();
         this.setState({
-            inviteLink: this.props.getPartyInvite(),
+            inviteLink: joinUrl == null ? 'whoops' : joinUrl,
         });
     }
 

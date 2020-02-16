@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
 
 // welcome page class, shown at startup
 class WelcomePage extends React.Component {
@@ -10,8 +8,7 @@ class WelcomePage extends React.Component {
     }
 
     handleClick() {
-        let url = this.props.onCreateParty();
-        // window.open(url);
+        this.props.onCreateParty();
     }
 
     render() {
