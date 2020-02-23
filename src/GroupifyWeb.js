@@ -8,7 +8,7 @@ import PlaylistCreatedPage from './PlaylistCreatedPage';
 
 // GroupifyWeb class, parent of all sub-pages
 const DEBUG = true;
-const API_ENDPOINT = 'http://24.16.66.0:1001/api';
+const API_ENDPOINT = 'http://localhost:1000/api';
 
 class GroupifyWeb extends React.Component {
     constructor(props) {
@@ -23,27 +23,28 @@ class GroupifyWeb extends React.Component {
         this.createParty = this.createParty.bind(this);
         this.getPartyInvite = this.getPartyInvite.bind(this);
         this.createPlaylist = this.createPlaylist.bind(this);
+        this.getGuestList = this.getGuestList.bind(this);
     }
 
     // fired when the user clicks "Start the Party" on the WelcomePage
     async createParty() {
         // get the authentication URL
         console.log('requesting create party from service...');
-        let endpointUrl = API_ENDPOINT + '/action?action=create&party=null'
-        const authUrl = await fetch(endpointUrl, {
-            // mode: 'no-cors',
+        let endpointUrl = API_ENDPOINT + '/create'
+        const response = await fetch(endpointUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         })
         .then((response) => {
-            return response.text();
+            return response.json()
         })
         .catch((error) => {
-            console.error('error occurred:', error);
+            console.log('error occurred:', error);
         });
-        console.log('success, url:', authUrl);
+        const authUrl = response.authUrl;
+        console.log('got auth url:', authUrl);
 
         // save partyId
         let index = authUrl.search('&state=') + 7;
@@ -63,30 +64,57 @@ class GroupifyWeb extends React.Component {
     // fired when the ConsolePage loads
     async getPartyInvite() {
         // endpoint url
-        const endpointUrl = API_ENDPOINT + '/join?party=' + this.state.partyId;
+        const endpointUrl = API_ENDPOINT + '/add?party=' + this.state.partyId;
 
         console.log('getting join party url from service...');
-        let joinUrl = await fetch(endpointUrl, {
+        let response = await fetch(endpointUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         })
         .then((response) => {
-            return response.text();
+            return response.json();
         })
         .catch((error) => {
             console.error('error:' + error);
             return null;
         });
-        console.log('response:' + joinUrl);
-        return joinUrl.startsWith('no party with') ? null : joinUrl;
+
+        // handle response
+        if (response == null) {
+            console.log('party not found')
+            return null;
+        }
+        else {
+            const joinUrl = response.authUrl;
+            console.log('got url:' + joinUrl);
+            return joinUrl;
+        }
+    }
+
+    // fired when the ConsolePage starts
+    async getGuestList() {
+        const endpointUrl = API_ENDPOINT + '/party?id=' + this.state.partyId;
+        const response = await fetch(endpointUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('error:', error);
+        });
+        return response.users;
     }
 
     // fired when the user clicks "Everyone's In" on the ConsolePage
     async createPlaylist() {
         console.log('creating playlist...');
-        let endpointUrl = API_ENDPOINT + '/action?action=MAKE&party=' + this.state.partyId;
+        let endpointUrl = API_ENDPOINT + '/make?party=' + this.state.partyId;
         let res = await fetch(endpointUrl, {
             method: 'GET',
             headers: {
@@ -94,19 +122,29 @@ class GroupifyWeb extends React.Component {
             }
         })
         .then((response) => {
-            return response.text();
+            return response.json();
         })
         .catch((error) => {
             console.error('error:' + error);
         })
-        console.log('response:' + res);
+
+        // if no response
+        if (res == null) {
+            console.error('couldn\'t retrieve url from service:', res);
+            return null;
+        }
+
+        // if response
+        const playlistUrl = res.playlistUrl;
+        console.log('got playlist url:', playlistUrl);
 
         // move onto PlaylistCreatedPage
         this.setState({
+            playlistLink: playlistUrl,
             stage: 2,
         });
 
-        return res;
+        return playlistUrl;
     }
     
     handleClick() {
@@ -121,19 +159,19 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <WelcomePage onCreateParty={this.createParty} />
-                    <button className="debug-controls" onClick={this.handleClick}>
+                    {/* <button className="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
         else if (this.state.stage == 1) {
             return (
                 <div>
-                    <ConsolePage onCreatePlaylist={this.createPlaylist} getPartyInvite={this.getPartyInvite} />
-                    <button className="debug-controls" onClick={this.handleClick}>
+                    <ConsolePage onCreatePlaylist={this.createPlaylist} getPartyInvite={this.getPartyInvite} getGuestList={this.getGuestList}/>
+                    {/* <button className="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
@@ -141,9 +179,9 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <PlaylistCreatedPage playlistLink={this.state.playlistLink} />
-                    <button className="debug-controls" onClick={this.handleClick}>
+                    {/* <button className="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
@@ -151,9 +189,9 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <h2>whoops, something went wrong</h2>
-                    <button class="debug-controls" onClick={this.handleClick}>
+                    {/* <button class="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }

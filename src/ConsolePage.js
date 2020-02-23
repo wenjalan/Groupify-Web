@@ -5,6 +5,7 @@ class ConsolePage extends React.Component {
         super(props);
         this.handleClick = this.handleClick.bind(this);
         this.loadInviteLink = this.loadInviteLink.bind(this);
+        this.loadGuestList = this.loadGuestList.bind(this);
         this.state = {
             inviteLink: 'loading...',
         };
@@ -17,6 +18,17 @@ class ConsolePage extends React.Component {
                 interval: i,
             })
         }
+        // start refreshing guest list
+        let i2 = setInterval(this.loadGuestList, 5000);
+        this.setState({
+            interval2: i2,
+        });
+    }
+
+    componentWillUnmount() {
+        // stop updating guest list
+        clearInterval(this.state.interval)
+        clearInterval(this.state.interval2);
     }
 
     async loadInviteLink() {
@@ -27,7 +39,15 @@ class ConsolePage extends React.Component {
                 inviteLink: joinUrl,
             });
         }
-        
+    }
+
+    async loadGuestList() {
+        // constantly refresh every 5 seconds
+        console.log('refreshing guest list...');
+        let guestList = await this.props.getGuestList();
+        this.setState({
+            guests: guestList,
+        });
     }
 
     handleClick() {
@@ -39,7 +59,7 @@ class ConsolePage extends React.Component {
             <div>
                 <h1>> Let's Get Groovin'</h1>
                 <h2>Current Party:</h2>
-                <GuestList />
+                <GuestList guests={this.state.guests}/>
                 <h3>Invite Link: <a>{this.state.inviteLink}</a></h3>
                 <button onClick={this.handleClick}>
                     EVERYONE'S READY
@@ -49,8 +69,11 @@ class ConsolePage extends React.Component {
     }
 }
 
-function GuestList() {
-    const guests = ['You (host)', 'Your Best Friend', 'Your Other Friend'];
+function GuestList(state) {
+    let guests = state.guests;
+    if (guests == null) {
+        return (<li>waiting...</li>);
+    }
     return guests.map((guests) => 
         <li>{guests}</li>
     );

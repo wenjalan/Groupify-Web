@@ -29,6 +29,7 @@ function WelcomeHeader() {
         <div>
             <h1><b>> Groupify Alpha</b></h1>
             <h2>A Spotify app for people with friends.</h2>
+            <h6>Alpha Version "will literally break if a single thing goes wrong". <a href='https://github.com/wenjalan/Groupify'>GitHub</a></h6>
         </div>
     );
 }

@@ -12,7 +12,7 @@ class PlaylistCreatedPage extends React.Component {
         return (
             <div>
                 <h1>> Done.</h1>
-                <h3>Check your Spotify.</h3>
+                <h3>{this.state.playlistLink}</h3>
             </div>
         );
     }
