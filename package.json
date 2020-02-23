@@ -1,5 +1,6 @@
 {
   "name": "groupify-web",
+  "homepage": "http://http://24.16.67.60:2000/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
