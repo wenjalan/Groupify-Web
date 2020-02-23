@@ -8,7 +8,7 @@ import PlaylistCreatedPage from './PlaylistCreatedPage';
 
 // GroupifyWeb class, parent of all sub-pages
 const DEBUG = true;
-const API_ENDPOINT = 'http://localhost:1000/api';
+const API_ENDPOINT = 'http://24.16.67.60:1000/api';
 
 class GroupifyWeb extends React.Component {
     constructor(props) {
