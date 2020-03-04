@@ -50,6 +50,20 @@ li {
   list-style-type: none;
 }
 
+.playlistOptions {
+  margin-bottom: 5%;
+}
+
+label {
+  margin-left: 5%;
+  color: #FFFFFF;
+  font-family: Consolas;
+}
+
+input {
+  margin-bottom: 1%;
+}
+
 .debug-controls {
   margin-top: 5%;
   margin-left: 5%;
