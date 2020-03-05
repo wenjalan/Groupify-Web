@@ -8,7 +8,7 @@ import PlaylistCreatedPage from './PlaylistCreatedPage';
 
 // GroupifyWeb class, parent of all sub-pages
 const DEBUG = true;
-const API_ENDPOINT = 'http://localhost:1000/api';
+const API_ENDPOINT = 'http://34.238.247.248:1000/api';
 
 class GroupifyWeb extends React.Component {
     constructor(props) {
@@ -170,9 +170,9 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <WelcomePage onCreateParty={this.createParty} />
-                    <button className="debug-controls" onClick={this.handleClick}>
+                    {/* <button className="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
@@ -180,9 +180,9 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <ConsolePage onCreatePlaylist={this.createPlaylist} getPartyInvite={this.getPartyInvite} getGuestList={this.getGuestList}/>
-                    <button className="debug-controls" onClick={this.handleClick}>
+                    {/* <button className="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
@@ -190,9 +190,9 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <PlaylistCreatedPage playlistLink={this.state.playlistLink} />
-                    <button className="debug-controls" onClick={this.handleClick}>
+                    {/* <button className="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
@@ -200,9 +200,9 @@ class GroupifyWeb extends React.Component {
             return (
                 <div>
                     <h2>whoops, something went wrong</h2>
-                    <button class="debug-controls" onClick={this.handleClick}>
+                    {/* <button class="debug-controls" onClick={this.handleClick}>
                         stage: {this.state.stage}
-                    </button>
+                    </button> */}
                 </div>
             );
         }
